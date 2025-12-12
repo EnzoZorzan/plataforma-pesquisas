@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 
 public class TestPlataformaPesquisasApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.from(PlataformaPesquisasApplication::main).with(TestcontainersConfiguration.class).run(args);
-	}
+//	public static void main(String[] args) {
+//		SpringApplication.from(PlataformaPesquisasApplication::main).with(TestcontainersConfiguration.class).run(args);
+//	}
 
 }

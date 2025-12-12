@@ -6,9 +6,13 @@ import org.springframework.stereotype.Service;
 import com.plataforma.plataforma_pesquisas.entity.Formularios;
 import com.plataforma.plataforma_pesquisas.entity.Questoes;
 import com.plataforma.plataforma_pesquisas.repository.FormulariosRepository;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,29 +28,57 @@ public class FormulariosService {
         return formularioRepository.findById(id);
     }
 
+    @Transactional
     public Formularios save(Formularios form) {
 
         if (form.getId() != null) {
+
             Formularios existente = formularioRepository.findById(form.getId())
                     .orElseThrow(() -> new RuntimeException("Formulário não encontrado"));
-
-            existente.getQuestoes().clear();
-            formularioRepository.flush();
 
             existente.setTitulo(form.getTitulo());
             existente.setDescricao(form.getDescricao());
             existente.setEmpresa(form.getEmpresa());
 
+            // mapa de questões já existentes
+            Map<Long, Questoes> mapaExistentes = existente.getQuestoes()
+                    .stream()
+                    .collect(Collectors.toMap(Questoes::getId, q -> q));
+
+            // 1️⃣ Remover questões que não vieram no payload
+            List<Long> idsEnviados = form.getQuestoes()
+                    .stream()
+                    .map(Questoes::getId)
+                    .filter(Objects::nonNull)
+                    .toList();
+
+            existente.getQuestoes().removeIf(q -> q.getId() != null && !idsEnviados.contains(q.getId()));
+
+            // 2️⃣ Atualizar + adicionar novas
             for (Questoes q : form.getQuestoes()) {
-                q.setFormulario(existente);
-                existente.getQuestoes().add(q);
+
+                if (q.getId() == null) {
+                    // nova questão
+                    q.setFormulario(existente);
+                    existente.getQuestoes().add(q);
+                    continue;
+                }
+
+                // questão existente
+                Questoes original = mapaExistentes.get(q.getId());
+                if (original != null) {
+                    original.setDescricaoPergunta(q.getDescricaoPergunta());
+                    original.setQtype(q.getQtype());
+                    original.setOptions(q.getOptions());
+                    original.setOrd(q.getOrd());
+                }
             }
 
-            return formularioRepository.save(existente);
+            return existente;
         }
 
+        // criar novo
         Formularios novo = formularioRepository.save(form);
-
         for (Questoes q : form.getQuestoes()) {
             q.setFormulario(novo);
         }

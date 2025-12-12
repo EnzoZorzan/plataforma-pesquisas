@@ -25,13 +25,20 @@ public class SecurityConfig {
                 .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
+                // 🔓 ROTAS PÚBLICAS PRIMEIRO!
+                .requestMatchers("/api/v1/convites/validar/**").permitAll()
+                .requestMatchers("/api/v1/respostas-publicas/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/formularios/**").permitAll()
+                // 🔒 Rotas públicas do auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // 🔐 Tudo do /api/v1 precisa de token
                 .requestMatchers("/api/v1/**").authenticated()
+                // Qualquer outra rota libera
                 .anyRequest().permitAll()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                .oauth2ResourceServer(oauth2
+                        -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 );
 
         return http.build();

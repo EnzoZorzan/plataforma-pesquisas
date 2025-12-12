@@ -1,5 +1,10 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.plataforma.plataforma_pesquisas.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,37 +19,43 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
-import com.vladmihalcea.hibernate.type.json.JsonType;
-import java.util.Map;
-import org.hibernate.annotations.Type;
-
+/**
+ *
+ * @author enzo.lima
+ */
 @Entity
-@Table(name = "respostas")
+@Table(name = "convites_pesquisa")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Respostas {
+public class ConvitePesquisa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Pode ser nulo em TOTEM
+     */
+    @Column(nullable = true)
+    private String email;
+
+    /**
+     * Token único para acesso à pesquisa
+     */
+    @Column(unique = true, nullable = false)
+    private String tokenAcesso;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "formulario_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Formularios formulario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    private boolean respondido = false;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    private Map<String, Object> resposta;
-
-    @CreationTimestamp
-    private LocalDateTime dataResposta;
+    private LocalDateTime enviadoEm;
+    private LocalDateTime respondidoEm;
 }
 

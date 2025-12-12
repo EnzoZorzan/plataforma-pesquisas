@@ -39,6 +39,19 @@ public class UsuarioService {
                 // Se senha enviada é nova → gerar hash
                 u.setSenha(passwordEncoder.encode(u.getSenha()));
             }
+            
+            if(u.getPerfil() == null){
+                u.setPerfil(existente.getPerfil());
+            } else {
+                u.setPerfil(u.getPerfil());
+            }
+            
+            if(u.getEmpresa() == null){
+                u.setEmpresa(existente.getEmpresa());
+            } else {
+                u.setEmpresa(u.getEmpresa());
+            }
+            
         } // CRIAR: usuário novo
         else {
             // Sempre hashear senha ao criar
