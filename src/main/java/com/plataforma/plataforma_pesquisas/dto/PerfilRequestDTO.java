@@ -4,10 +4,13 @@
  */
 package com.plataforma.plataforma_pesquisas.dto;
 
+import java.util.List;
+
 /**
  *
  * @author enzo.lima
  */
-public class PerfilDTO {
-    
-}
+public record PerfilRequestDTO(
+    String nome,
+    List<Long> permissoesIds
+) {}

@@ -4,7 +4,8 @@
  */
 package com.plataforma.plataforma_pesquisas.controller;
 
-import com.plataforma.plataforma_pesquisas.entity.Permissoes;
+import com.plataforma.plataforma_pesquisas.dto.PermissaoRequestDTO;
+import com.plataforma.plataforma_pesquisas.dto.PermissaoResponseDTO;
 import com.plataforma.plataforma_pesquisas.service.PermissoesService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -27,31 +28,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PermissoesController {
 
-    private final PermissoesService permissoesService;
+    private final PermissoesService service;
 
     @GetMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Permissoes>> getAllPermissoes() {
-        return ResponseEntity.ok(permissoesService.findAll());
+    public ResponseEntity<List<PermissaoResponseDTO>> getAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Permissoes> createPermissoes(@RequestBody Permissoes permissao) {
-        return ResponseEntity.ok(permissoesService.save(permissao));
+    public ResponseEntity<PermissaoResponseDTO> create(
+            @RequestBody PermissaoRequestDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Permissoes> updatePermissoes(@PathVariable Long id, @RequestBody Permissoes permissao) {
-        permissao.setId(id);
-        return ResponseEntity.ok(permissoesService.save(permissao));
+    public ResponseEntity<PermissaoResponseDTO> update(
+            @PathVariable Long id,
+            @RequestBody PermissaoRequestDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deletePermissoes(@PathVariable Long id) {
-        permissoesService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

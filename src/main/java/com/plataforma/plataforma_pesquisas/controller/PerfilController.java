@@ -4,6 +4,8 @@
  */
 package com.plataforma.plataforma_pesquisas.controller;
 
+import com.plataforma.plataforma_pesquisas.dto.PerfilRequestDTO;
+import com.plataforma.plataforma_pesquisas.dto.PerfilResponseDTO;
 import com.plataforma.plataforma_pesquisas.entity.Perfil;
 import com.plataforma.plataforma_pesquisas.service.PerfilService;
 import java.util.List;
@@ -26,17 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/perfis")
 @RequiredArgsConstructor
 public class PerfilController {
-    
+
     private final PerfilService perfilsService;
 
     @GetMapping
-//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SUPERVISOR')")
     public ResponseEntity<List<Perfil>> getAllPerfils() {
         return ResponseEntity.ok(perfilsService.findAll());
     }
 
     @GetMapping("/{id}")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SUPERVISOR')")
     public ResponseEntity<Perfil> getPerfil(@PathVariable Long id) {
         return perfilsService.findById(id)
                 .map(ResponseEntity::ok)
@@ -44,20 +44,18 @@ public class PerfilController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SUPERVISOR')")
-    public ResponseEntity<Perfil> createPerfil(@RequestBody Perfil perfil) {
-        return ResponseEntity.ok(perfilsService.save(perfil));
+    public PerfilResponseDTO create(@RequestBody PerfilRequestDTO dto) {
+        return perfilsService.create(dto);
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SUPERVISOR')")
-    public ResponseEntity<Perfil> updatePerfil(@PathVariable Long id, @RequestBody Perfil perfil) {
-        perfil.setId(id);
-        return ResponseEntity.ok(perfilsService.save(perfil));
+    public PerfilResponseDTO update(
+            @PathVariable Long id,
+            @RequestBody PerfilRequestDTO dto) {
+        return perfilsService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SUPERVISOR')")
     public ResponseEntity<Void> deletePerfil(@PathVariable Long id) {
         perfilsService.delete(id);
         return ResponseEntity.noContent().build();

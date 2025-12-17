@@ -4,10 +4,12 @@
  */
 package com.plataforma.plataforma_pesquisas.service;
 
+import com.plataforma.plataforma_pesquisas.dto.PermissaoRequestDTO;
+import com.plataforma.plataforma_pesquisas.dto.PermissaoResponseDTO;
 import com.plataforma.plataforma_pesquisas.entity.Permissoes;
 import com.plataforma.plataforma_pesquisas.repository.PermissoesRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,24 +19,50 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PermissoesService {
 
-    private final PermissoesRepository permissoesRepository;
+    private final PermissoesRepository repository;
 
-    public List<Permissoes> findAll() {
-        return permissoesRepository.findAll();
+    public List<PermissaoResponseDTO> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
-    public Optional<Permissoes> findById(Long id) {
-        return permissoesRepository.findById(id);
+    public PermissaoResponseDTO create(PermissaoRequestDTO dto) {
+
+        Permissoes permissao = Permissoes.builder()
+                .codigo(dto.codigo().toUpperCase())
+                .descricao(dto.descricao())
+                .build();
+
+        repository.save(permissao);
+        return toDTO(permissao);
     }
 
-    public Permissoes save(Permissoes permissao) {
-        return permissoesRepository.save(permissao);
+    public PermissaoResponseDTO update(Long id, PermissaoRequestDTO dto) {
+
+        Permissoes permissao = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Permissão não encontrada"));
+
+        permissao.setCodigo(dto.codigo().toUpperCase());
+        permissao.setDescricao(dto.descricao());
+
+        return toDTO(permissao);
     }
 
     public void delete(Long id) {
-        permissoesRepository.deleteById(id);
+        repository.deleteById(id);
     }
-    
+
+    private PermissaoResponseDTO toDTO(Permissoes p) {
+        return new PermissaoResponseDTO(
+                p.getId(),
+                p.getCodigo(),
+                p.getDescricao()
+        );
+    }
 }
+

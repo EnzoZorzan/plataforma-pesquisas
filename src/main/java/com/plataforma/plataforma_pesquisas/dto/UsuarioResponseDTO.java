@@ -4,10 +4,19 @@
  */
 package com.plataforma.plataforma_pesquisas.dto;
 
+import com.plataforma.plataforma_pesquisas.entity.Perfil;
+import java.util.List;
+
 /**
  *
  * @author enzo.lima
  */
-public class PermissoesDTO {
-    
+public record UsuarioResponseDTO(
+        Long id,
+        String nome,
+        String email,
+        Perfil perfil,
+        List<String> permissoes
+        ) {
+
 }

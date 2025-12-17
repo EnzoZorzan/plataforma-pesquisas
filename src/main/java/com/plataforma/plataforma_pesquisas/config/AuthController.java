@@ -10,12 +10,14 @@ package com.plataforma.plataforma_pesquisas.config;
  */
 import com.plataforma.plataforma_pesquisas.dto.LoginRequest;
 import com.plataforma.plataforma_pesquisas.dto.LoginResponse;
+import com.plataforma.plataforma_pesquisas.entity.Permissoes;
 import com.plataforma.plataforma_pesquisas.entity.ResetToken;
 import com.plataforma.plataforma_pesquisas.entity.Usuario;
 import com.plataforma.plataforma_pesquisas.repository.ResetTokenRepository;
 import com.plataforma.plataforma_pesquisas.service.UsuarioService;
 import java.util.UUID;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
@@ -35,13 +37,24 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
-        Usuario usuario = usuarioService.findByEmail(req.getEmail()).orElseThrow(() -> new RuntimeException("Email inválido"));
+
+        Usuario usuario = usuarioService.findByEmail(req.getEmail())
+                .orElseThrow(() -> new RuntimeException("Email inválido"));
+
         if (!passwordEncoder.matches(req.getSenha(), usuario.getSenha())) {
             throw new RuntimeException("Senha inválida");
         }
-        String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getPerfil().getNome());
+
+        List<String> permissoes = usuario.getPerfil()
+                .getPermissoes()
+                .stream()
+                .map(Permissoes::getCodigo)
+                .toList();
+
+        String token = jwtUtil.generateToken(usuario, permissoes);
+
         return ResponseEntity.ok(new LoginResponse(token, usuario));
-    } 
+    }
 
     @PostMapping("/recuperar-senha")
     public ResponseEntity<?> recuperar(@RequestBody Map<String, String> body) {
