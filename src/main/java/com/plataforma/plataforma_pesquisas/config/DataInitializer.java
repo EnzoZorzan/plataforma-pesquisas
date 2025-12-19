@@ -4,13 +4,14 @@
  */
 package com.plataforma.plataforma_pesquisas.config;
 
-import com.plataforma.plataforma_pesquisas.entity.Perfil;
 import com.plataforma.plataforma_pesquisas.entity.Usuario;
 import com.plataforma.plataforma_pesquisas.repository.EmpresasRepository;
 import com.plataforma.plataforma_pesquisas.repository.PerfilRepository;
 import com.plataforma.plataforma_pesquisas.repository.UsuarioRepository;
-import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,8 @@ public class DataInitializer {
     private final EmpresasRepository empresaRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     public void init() {
 
         if (usuarioRepository.count() > 0) return;
