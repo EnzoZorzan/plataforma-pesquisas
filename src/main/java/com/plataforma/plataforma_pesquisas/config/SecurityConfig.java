@@ -32,6 +32,9 @@ public class SecurityConfig {
                         -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/v1/formularios/publico").permitAll()
+                .requestMatchers("/api/v1/acesso/**").permitAll()
+                .requestMatchers("/api/v1/respostas/respostas-publicas").permitAll()
                 // endpoints públicos
                 .requestMatchers(
                         "/api/auth/**",

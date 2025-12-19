@@ -4,10 +4,14 @@
  */
 package com.plataforma.plataforma_pesquisas.dto;
 
+import lombok.Data;
+
 /**
  *
  * @author enzo.lima
  */
-public class EmpresasDTO {
-    
+@Data
+public class ValidarAcessoDTO {
+    private Long formularioId;
+    private String codigoFunc;
 }

@@ -30,34 +30,32 @@ public class UsuarioService {
 
     public Usuario save(Usuario u) {
 
-        // EDITAR: já existe usuário
         if (u.getId() != null) {
             Usuario existente = usuarioRepository.findById(u.getId())
                     .orElseThrow();
 
-            // Se NÃO enviaram senha → mantém a existente
+            // 🔐 SENHA
             if (u.getSenha() == null || u.getSenha().isBlank()) {
                 u.setSenha(existente.getSenha());
             } else {
-                // Se senha enviada é nova → gerar hash
-                u.setSenha(passwordEncoder.encode(u.getSenha()));
+                // 🔒 Só criptografa se NÃO for hash
+                if (!u.getSenha().startsWith("$2")) {
+                    u.setSenha(passwordEncoder.encode(u.getSenha()));
+                }
             }
 
+            // PERFIL
             if (u.getPerfil() == null) {
                 u.setPerfil(existente.getPerfil());
-            } else {
-                u.setPerfil(u.getPerfil());
             }
 
+            // EMPRESA
             if (u.getEmpresa() == null) {
                 u.setEmpresa(existente.getEmpresa());
-            } else {
-                u.setEmpresa(u.getEmpresa());
             }
 
-        } // CRIAR: usuário novo
-        else {
-            // Sempre hashear senha ao criar
+        } else {
+            // CRIAR usuário
             if (u.getSenha() != null && !u.getSenha().isBlank()) {
                 u.setSenha(passwordEncoder.encode(u.getSenha()));
             }

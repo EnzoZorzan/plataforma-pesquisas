@@ -45,5 +45,12 @@ public class FormulariosController {
         formulariosService.delete(id);
         return ResponseEntity.noContent().build();
     }
-    
+
+    @GetMapping("/publico")
+    public ResponseEntity<Formularios> getFormularioPublico() {
+        return ResponseEntity.ok(
+                formulariosService.findFormularioPublicoAtivo()
+        );
+    }
+
 }

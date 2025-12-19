@@ -6,8 +6,7 @@ import com.plataforma.plataforma_pesquisas.entity.Respostas;
 import java.util.List;
 
 public interface RespostasRepository extends JpaRepository<Respostas, Long> {
+    
+    public List<Respostas> findByFormularioId(Long formularioId);
 
-    List<Respostas> findByFormularioId(Long formularioId);
-
-    List<Respostas> findByUsuarioId(Long usuarioId);
 }

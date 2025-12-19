@@ -2,11 +2,22 @@ spring:
   application:
     name: plataforma-pesquisas
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: enzozorzanlima@gmail.com
+    password: vhfo ydxy ufrl lxiu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   datasource:
     url: jdbc:postgresql://localhost:5432/platformdb
     username: postgres
     password: masterkey
-    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:

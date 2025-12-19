@@ -38,20 +38,10 @@ public class RespostasService {
         return respostasRepository.findByFormularioId(formularioId);
     }
 
-    public List<Respostas> findByUsuarioId(Long usuarioId) {
-        return respostasRepository.findByUsuarioId(usuarioId);
-    }
-
-    /**
-     * Salva resposta ANÔNIMA (sem usuário) para um formulário, recebendo as
-     * respostas como um Map (questao->valor).
-     */
-
     public Respostas salvarRespostaAnonima(Formularios formulario, Map<String, Object> respostasMap) {
 
         Respostas r = Respostas.builder()
                 .formulario(formulario)
-                .usuario(null)
                 .resposta(respostasMap) // Map direto
                 .build();
 

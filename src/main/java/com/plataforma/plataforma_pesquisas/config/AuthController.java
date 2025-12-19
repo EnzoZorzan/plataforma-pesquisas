@@ -14,6 +14,7 @@ import com.plataforma.plataforma_pesquisas.entity.Permissoes;
 import com.plataforma.plataforma_pesquisas.entity.ResetToken;
 import com.plataforma.plataforma_pesquisas.entity.Usuario;
 import com.plataforma.plataforma_pesquisas.repository.ResetTokenRepository;
+import com.plataforma.plataforma_pesquisas.service.EmailService;
 import com.plataforma.plataforma_pesquisas.service.UsuarioService;
 import java.util.UUID;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final ResetTokenRepository resetTokenRepository;
+    private final EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
@@ -58,6 +60,7 @@ public class AuthController {
 
     @PostMapping("/recuperar-senha")
     public ResponseEntity<?> recuperar(@RequestBody Map<String, String> body) {
+
         String email = body.get("email");
 
         Usuario usuario = usuarioService.findByEmail(email)
@@ -73,8 +76,21 @@ public class AuthController {
 
         resetTokenRepository.save(rt);
 
-        System.out.println("==== LINK DE RECUPERAÇÃO ====");
-        System.out.println("http://localhost:5173/redefinir-senha/" + token);
+        String link = "http://localhost:5173/redefinir-senha/" + token;
+
+        String html = """
+        <h2>Recuperação de senha</h2>
+        <p>Olá, %s</p>
+        <p>Clique no link abaixo para redefinir sua senha:</p>
+        <a href="%s">%s</a>
+        <p>Este link expira em 2 horas.</p>
+    """.formatted(usuario.getNome(), link, link);
+
+        emailService.enviarEmail(
+                usuario.getEmail(),
+                "Recuperação de senha",
+                html
+        );
 
         return ResponseEntity.ok().build();
     }
@@ -93,7 +109,7 @@ public class AuthController {
         }
 
         Usuario u = rt.getUsuario();
-        u.setSenha(passwordEncoder.encode(novaSenha)); // ✔ correto
+        u.setSenha(novaSenha); // senha PLANA
         usuarioService.save(u);
 
         resetTokenRepository.delete(rt);
@@ -101,3 +117,5 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 }
+
+//vhfo ydxy ufrl lxiu

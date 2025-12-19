@@ -28,6 +28,14 @@ public class FormulariosService {
         return formularioRepository.findById(id);
     }
 
+    // 🔴 MÉTODO NOVO (FORMULÁRIO PÚBLICO)
+    public Formularios findFormularioPublicoAtivo() {
+        return formularioRepository
+                .findFirstByAtivoTrueAndEmpresaIsNullOrderByDataCriacaoDesc()
+                .orElseThrow(()
+                        -> new RuntimeException("Nenhum formulário público ativo encontrado"));
+    }
+
     @Transactional
     public Formularios save(Formularios form) {
 

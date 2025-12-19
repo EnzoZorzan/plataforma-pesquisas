@@ -4,8 +4,7 @@
  */
 package com.plataforma.plataforma_pesquisas.repository;
 
-import com.plataforma.plataforma_pesquisas.entity.ConvitePesquisa;
-import java.util.List;
+import com.plataforma.plataforma_pesquisas.entity.ListaFuncionariosPesquisa;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,10 +12,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author enzo.lima
  */
-public interface ConvitePesquisaRepository extends JpaRepository<ConvitePesquisa, Long> {
+public interface ListaFuncionariosPesquisaRepository extends JpaRepository<ListaFuncionariosPesquisa, Long> {
 
-    Optional<ConvitePesquisa> findByTokenAcesso(String token);
+    Optional<ListaFuncionariosPesquisa> findByCodigoFunc(String codigoFunc);
+    
+    boolean existsByCodigoFuncAndEmpresaFuncId(String codigoFunc, Long empresaId);
 
-    List<ConvitePesquisa> findByFormularioId(Long formularioId);
 }
-

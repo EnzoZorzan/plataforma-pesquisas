@@ -2,11 +2,12 @@ package com.plataforma.plataforma_pesquisas.controller;
 
 import com.plataforma.plataforma_pesquisas.dto.RespostasDTO;
 import com.plataforma.plataforma_pesquisas.entity.Formularios;
+import com.plataforma.plataforma_pesquisas.entity.ListaFuncionariosPesquisa;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import com.plataforma.plataforma_pesquisas.entity.Respostas;
-import com.plataforma.plataforma_pesquisas.entity.Usuario;
+import com.plataforma.plataforma_pesquisas.service.ControleAcessoService;
 import com.plataforma.plataforma_pesquisas.service.RespostasService;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -23,41 +24,8 @@ import org.springframework.http.ResponseEntity;
 public class RespostasController {
 
     private final RespostasService respostasService;
+    private final ControleAcessoService acessoService;
 
-    /**
-     * Envio autenticado (interno) das respostas. Pode ter usuário ou ser
-     * anônimo.
-     */
-    @PostMapping
-    public ResponseEntity<Respostas> submitRespostas(@RequestBody RespostasDTO req) {
-
-        if (req.getFormularioId() == null || req.getRespostas() == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        // Criar referências sem carregar do banco
-        Formularios form = new Formularios();
-        form.setId(req.getFormularioId());
-
-        Usuario usuario = null;
-        if (req.getUsuarioId() != null) {
-            usuario = new Usuario();
-            usuario.setId(req.getUsuarioId());
-        }
-
-        Respostas r = Respostas.builder()
-                .formulario(form)
-                .usuario(usuario) // pode ser null (anônimo)
-                .resposta(req.getRespostas()) // AGORA JSON REAL!
-                .build();
-
-        Respostas saved = respostasService.save(r);
-        return ResponseEntity.ok(saved);
-    }
-
-    /**
-     * Obter todas respostas de um formulário
-     */
     @GetMapping("/formulario/{id}")
     public ResponseEntity<List<Respostas>> getByFormulario(@PathVariable Long id) {
         return ResponseEntity.ok(respostasService.findByFormularioId(id));
@@ -96,10 +64,9 @@ public class RespostasController {
         for (Respostas r : list) {
             String id = String.valueOf(r.getId());
             String date = r.getDataResposta() != null ? r.getDataResposta().toString() : "";
-            String usuarioId = r.getUsuario() != null ? String.valueOf(r.getUsuario().getId()) : "";
             String respostaJson = r.getResposta() != null ? r.getResposta().toString().replace("\"", "\"\"") : "";
 
-            sb.append(id).append(",").append(date).append(",").append(usuarioId)
+            sb.append(id).append(",").append(date).append(",")
                     .append(",\"").append(respostaJson).append("\"\n");
         }
 
@@ -115,4 +82,27 @@ public class RespostasController {
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .body(new InputStreamResource(bais));
     }
+
+    @PostMapping("/respostas-publicas")
+    public ResponseEntity<?> enviarResposta(@RequestBody RespostasDTO dto) {
+
+        ListaFuncionariosPesquisa funcionario
+                = acessoService.validarCodigo(
+                        dto.getFormularioId(),
+                        dto.getCodigoFunc()
+                );
+
+        Formularios formulario = new Formularios();
+        formulario.setId(dto.getFormularioId());
+
+        respostasService.salvarRespostaAnonima(
+                formulario,
+                dto.getRespostas()
+        );
+
+        acessoService.registrarResposta(formulario, funcionario);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

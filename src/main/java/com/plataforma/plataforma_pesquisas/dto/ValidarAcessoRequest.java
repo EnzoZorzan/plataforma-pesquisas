@@ -4,7 +4,6 @@
  */
 package com.plataforma.plataforma_pesquisas.dto;
 
-import java.util.Map;
 import lombok.Data;
 
 /**
@@ -12,7 +11,9 @@ import lombok.Data;
  * @author enzo.lima
  */
 @Data
-public class RespostaPublicaRequest {
-    private String token;
-    private Map<String, Object> respostas;
+public class ValidarAcessoRequest {
+
+    private Long formularioId;
+    private String codigoFunc;
 }
+

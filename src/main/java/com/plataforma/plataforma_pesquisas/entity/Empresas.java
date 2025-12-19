@@ -41,5 +41,9 @@ public class Empresas {
     @OneToMany(mappedBy = "empresa")
     @JsonIgnore
     private List<Formularios> formularios;
+    
+    @OneToMany(mappedBy = "empresaFunc", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ListaFuncionariosPesquisa> funcionarios;
 
 }

@@ -1,8 +1,11 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.plataforma.plataforma_pesquisas.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,33 +17,34 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
-import com.vladmihalcea.hibernate.type.json.JsonType;
-import java.util.Map;
-import org.hibernate.annotations.Type;
-
+/**
+ *
+ * @author enzo.lima
+ */
 @Entity
-@Table(name = "respostas")
+@Table(name = "controle_acesso_pesquisa")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Respostas {
+public class ControleAcessoPesquisa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "formulario_id")
+    @ManyToOne
+    @JoinColumn(name = "formulario_id", nullable = false)
     private Formularios formulario;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    private Map<String, Object> resposta;
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id", nullable = false)
+    private ListaFuncionariosPesquisa funcionario;
 
-    @CreationTimestamp
-    private LocalDateTime dataResposta;
+    @Column(nullable = false)
+    private boolean respondido;
+
+    private LocalDateTime respondidoEm;
 }
 
