@@ -8,7 +8,8 @@ import com.plataforma.plataforma_pesquisas.entity.Usuario;
 import com.plataforma.plataforma_pesquisas.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -17,17 +18,19 @@ import org.springframework.stereotype.Component;
  * @author enzo.lima
  */
 @Component
-@DependsOn("entityManagerFactory")
 @RequiredArgsConstructor
-public class DataInitializer {
+public class DataInitializer implements ApplicationRunner {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
     @Transactional
-    public void init() {
+    public void run(ApplicationArguments args) {
 
-        if (usuarioRepository.count() > 0) return;
+        if (usuarioRepository.count() > 0) {
+            return;
+        }
 
         Usuario admin = new Usuario();
         admin.setNome("Enzo Zorzan Lima");
@@ -39,4 +42,3 @@ public class DataInitializer {
         System.out.println("✔ Usuário admin criado");
     }
 }
-
