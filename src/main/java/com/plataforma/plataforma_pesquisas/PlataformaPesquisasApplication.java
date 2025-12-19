@@ -6,12 +6,11 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EntityScan("com.plataforma.plataforma_pesquisas")
-@EnableJpaRepositories("com.plataforma.plataforma_pesquisas")
+@EntityScan("com.plataforma.plataforma_pesquisas.entity")
+@EnableJpaRepositories("com.plataforma.plataforma_pesquisas.repository")
 public class PlataformaPesquisasApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PlataformaPesquisasApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(PlataformaPesquisasApplication.class, args);
+    }
 }
