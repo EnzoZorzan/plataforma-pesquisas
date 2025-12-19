@@ -15,9 +15,9 @@ spring:
             enable: true
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: postgresql://postgres:qjqZWNCIwxashtMOljYEjXwVBtppzqlG@postgres.railway.internal:5432/railway
+    username: postgres
+    password: qjqZWNCIwxashtMOljYEjXwVBtppzqlG
     driver-class-name: org.postgresql.Driver
 
   jpa:
