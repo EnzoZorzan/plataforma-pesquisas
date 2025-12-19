@@ -20,14 +20,20 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
 
 
+spring:
   jpa:
-    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
-    show-sql: true
     properties:
-      hibernate.format_sql: true
+      hibernate:
+        format_sql: true
+        default_schema: public
+
 
 server:
   port: ${PORT:8081}
+  
+  spring:
+  flyway:
+    enabled: false
 

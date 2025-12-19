@@ -8,8 +8,7 @@ import com.plataforma.plataforma_pesquisas.entity.Usuario;
 import com.plataforma.plataforma_pesquisas.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +17,13 @@ import org.springframework.stereotype.Component;
  * @author enzo.lima
  */
 @Component
+@DependsOn("entityManagerFactory")
 @RequiredArgsConstructor
 public class DataInitializer {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void init() {
 
