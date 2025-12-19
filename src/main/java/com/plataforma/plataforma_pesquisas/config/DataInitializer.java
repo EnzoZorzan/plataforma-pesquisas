@@ -4,7 +4,11 @@
  */
 package com.plataforma.plataforma_pesquisas.config;
 
+import com.plataforma.plataforma_pesquisas.entity.Empresas;
+import com.plataforma.plataforma_pesquisas.entity.Perfil;
 import com.plataforma.plataforma_pesquisas.entity.Usuario;
+import com.plataforma.plataforma_pesquisas.repository.EmpresasRepository;
+import com.plataforma.plataforma_pesquisas.repository.PerfilRepository;
 import com.plataforma.plataforma_pesquisas.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,23 +26,29 @@ import org.springframework.stereotype.Component;
 public class DataInitializer implements ApplicationRunner {
 
     private final UsuarioRepository usuarioRepository;
+    private final PerfilRepository perfilRepository;
+    private final EmpresasRepository empresasRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
 
-        if (usuarioRepository.count() > 0) {
-            return;
-        }
+        Perfil perfil = perfilRepository.findById(1L)
+                .orElseThrow(() -> new RuntimeException("Perfil 1 não existe"));
+
+        Empresas empresa = empresasRepository.findById(9L)
+                .orElseThrow(() -> new RuntimeException("Empresa 9 não existe"));
 
         Usuario admin = new Usuario();
         admin.setNome("Enzo Zorzan Lima");
         admin.setEmail("enzozorzanlima@gmail.com");
         admin.setSenha(passwordEncoder.encode("123456"));
+        admin.setPerfil(perfil);
+        admin.setEmpresa(empresa);
 
         usuarioRepository.save(admin);
 
-        System.out.println("✔ Usuário admin criado");
+        System.out.println("✔ Usuário admin criado via Java");
     }
 }
