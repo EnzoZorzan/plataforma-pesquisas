@@ -2,6 +2,19 @@ spring:
   application:
     name: plataforma-pesquisas
 
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: public
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -14,26 +27,9 @@ spring:
           starttls:
             enable: true
 
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-
-
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-        default_schema: public
+  flyway:
+    enabled: false
 
 
 server:
   port: ${PORT:8081}
-  
-  spring:
-  flyway:
-    enabled: false
-
