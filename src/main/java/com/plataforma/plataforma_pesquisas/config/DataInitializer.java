@@ -35,10 +35,20 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
 
         Perfil perfil = perfilRepository.findById(1L)
-                .orElseThrow(() -> new RuntimeException("Perfil 1 não existe"));
+                .orElseGet(() -> {
+                    Perfil p = new Perfil();
+                    p.setId(1L);
+                    p.setNome("Administrador");
+                    return perfilRepository.save(p);
+                });
 
         Empresas empresa = empresasRepository.findById(9L)
-                .orElseThrow(() -> new RuntimeException("Empresa 9 não existe"));
+                .orElseGet(() -> {
+                    Empresas e = new Empresas();
+                    e.setId(9L);
+                    e.setNome("Empresa Padrão");
+                    return empresasRepository.save(e);
+                });
 
         Usuario admin = new Usuario();
         admin.setNome("Enzo Zorzan Lima");
@@ -46,9 +56,9 @@ public class DataInitializer implements ApplicationRunner {
         admin.setSenha(passwordEncoder.encode("123456"));
         admin.setPerfil(perfil);
         admin.setEmpresa(empresa);
-
         usuarioRepository.save(admin);
 
-        System.out.println("✔ Usuário admin criado via Java");
+        System.out.println("✔ Bootstrap completo");
     }
+
 }
