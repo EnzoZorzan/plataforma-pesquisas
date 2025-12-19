@@ -5,8 +5,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${SPRING_MAIL_USERNAME}
-    password: ${SPRING_MAIL_PASSWORD}
+    username: teste@gmail.com
+    password: teste
     properties:
       mail:
         smtp:
@@ -15,10 +15,10 @@ spring:
             enable: true
 
   datasource:
-    url: postgresql://postgres:qjqZWNCIwxashtMOljYEjXwVBtppzqlG@postgres.railway.internal:5432/railway
-    username: postgres
-    password: qjqZWNCIwxashtMOljYEjXwVBtppzqlG
-    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
 
   jpa:
     hibernate:
@@ -34,87 +34,3 @@ spring:
 server:
   port: ${PORT:8081}
 
-# PERFIS
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/platformdb_dev
-    username: postgres
-    password: postgres
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-
-keycloak:
-  realm: platform
-  auth-server-url: http://localhost:8080
-  resource: platform-backend
-  public-client: false
-  credentials:
-    secret: CHAVE_SECRETA_DO_CLIENTE
-  security-constraints:
-    - authRoles: ["ROLE_ADMIN","ROLE_USER"]
-      securityCollections:
-        - patterns: ["/api/v1/*"]
-
----
-spring:
-  config:
-    activate:
-      on-profile: homolog
-
-  datasource:
-    url: jdbc:postgresql://homolog-db:5432/platformdb_homolog
-    username: homolog
-    password: homolog
-
-  jpa:
-    hibernate:
-      ddl-auto: validate
-
-keycloak:
-  realm: platform
-  auth-server-url: https://keycloak-homolog.suaempresa.com
-  resource: platform-backend
-  public-client: false
-  credentials:
-    secret: HOMOLOG_SECRET
-  security-constraints:
-    - authRoles: ["ROLE_ADMIN","ROLE_USER"]
-      securityCollections:
-        - patterns: ["/api/v1/*"]
-
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: validate
-
-  flyway:
-    enabled: false
-
-
-keycloak:
-  realm: platform
-  auth-server-url: https://keycloak.suaempresa.com
-  resource: platform-backend
-  public-client: false
-  credentials:
-    secret: PROD_SECRET
-  security-constraints:
-    - authRoles: ["ROLE_ADMIN","ROLE_USER"]
-      securityCollections:
-        - patterns: ["/api/v1/*"]

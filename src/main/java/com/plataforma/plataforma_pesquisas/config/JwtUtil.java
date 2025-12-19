@@ -17,11 +17,11 @@ import java.util.List;
 @Component
 public class JwtUtil {
 
-//    private static final String SECRET
-//            = "CHAVE_SECRETA_ULTRA_SEGURA_32_BYTES_NO_MINIMO_123456";
+    private static final String SECRET
+            = "CHAVE_SECRETA_ULTRA_SEGURA_32_BYTES_NO_MINIMO_123456";
     
-    private static final String SECRET =
-        System.getenv("JWT_SECRET");
+//    private static final String SECRET =
+//        System.getenv("JWT_SECRET");
 
 
     private static final long EXPIRATION = 1000 * 60 * 60 * 24; // 24h
