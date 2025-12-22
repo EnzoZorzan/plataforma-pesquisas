@@ -51,6 +51,7 @@ public class DataInitializer implements ApplicationRunner {
                 .orElseGet(() -> {
                     Empresas e = new Empresas();
                     e.setNome("Empresa Padrão");
+                    e.setCnpj("05555555555");
                     return empresasRepository.save(e);
                 });
 
