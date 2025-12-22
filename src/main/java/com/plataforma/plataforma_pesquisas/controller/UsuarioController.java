@@ -17,13 +17,13 @@ public class UsuarioController {
     private final UsuarioService usuariosService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
+//    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
     public ResponseEntity<List<Usuario>> getAllUsuarios() {
         return ResponseEntity.ok(usuariosService.findAll());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
+//    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
     public ResponseEntity<Usuario> getUsuario(@PathVariable Long id) {
         return usuariosService.findById(id)
                 .map(ResponseEntity::ok)
@@ -31,20 +31,20 @@ public class UsuarioController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
+//    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
     public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario) {
         return ResponseEntity.ok(usuariosService.save(usuario));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
+//    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
     public ResponseEntity<Usuario> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
         usuario.setId(id);
         return ResponseEntity.ok(usuariosService.save(usuario));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
+//    @PreAuthorize("hasAuthority('USUARIOS_CADASTRO')")
     public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
         usuariosService.delete(id);
         return ResponseEntity.noContent().build();
