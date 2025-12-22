@@ -40,6 +40,12 @@ public class SecurityConfig {
                         "/api/auth/**",
                         "/error"
                 ).permitAll()
+                .requestMatchers("/api/v1/usuarios/**")
+                .hasAuthority("USUARIOS_CADASTRO")
+                .requestMatchers("/api/v1/empresas/**")
+                .hasAuthority("EMPRESAS_CADASTRO")
+                .requestMatchers("/api/v1/perfis/**")
+                .hasAuthority("PERFIS_CADASTRO")
                 // todo o resto protegido
                 .anyRequest().authenticated()
                 )
