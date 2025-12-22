@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/formularios/publico").permitAll()
                 .requestMatchers("/api/v1/acesso/**").permitAll()
-                .requestMatchers("/api/v1/respostas/responder").permitAll()
+                .requestMatchers("/api/v1/respostas/respostas-publicas").permitAll()
                 // endpoints públicos
                 .requestMatchers(
                         "/api/auth/**",
