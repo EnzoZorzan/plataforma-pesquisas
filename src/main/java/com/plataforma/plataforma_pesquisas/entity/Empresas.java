@@ -19,19 +19,19 @@ public class Empresas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String nome;
 
-    @Column(nullable = false)
+    @Column
     private String emailEmp;
 
-    @Column(nullable = false)
+    @Column
     private String telefoneEmp;
 
-    @Column(nullable = false)
+    @Column
     private String enderecoEmp;
 
-    @Column(nullable = false)
+    @Column
     private String cnpj;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
