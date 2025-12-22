@@ -32,14 +32,32 @@ public class SecurityConfig {
                         -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                // públicos
-                .requestMatchers("/api/auth/**").permitAll()
-                // 🔓 BOOTSTRAP ADMIN (temporário)
-                .requestMatchers("/api/v1/perfis/**").permitAll()
-                .requestMatchers("/api/v1/permissoes/**").permitAll()
-                // protegidos por permissão
+                .requestMatchers("/api/v1/acesso/**").permitAll()
+                .requestMatchers("/api/v1/respostas/responder").permitAll()
+                // endpoints públicos
+                .requestMatchers(
+                        "/api/auth/**",
+                        "/error"
+                ).permitAll()
                 .requestMatchers("/api/v1/usuarios/**")
                 .hasAuthority("USUARIOS_CADASTRO")
+                .requestMatchers("/api/v1/empresas/**")
+                .hasAuthority("EMPRESAS_CADASTRO")
+                .requestMatchers("/api/v1/perfis/**")
+                .hasAuthority("PERFIS_CADASTRO")
+                .requestMatchers("/api/v1/permissoes/**")
+                .hasAuthority("PERMISSOES_CADASTRO")
+                .requestMatchers("/api/v1/questionarios/**")
+                .hasAuthority("QUESTIONARIOS_CADASTRO")
+                .requestMatchers("/api/v1/questionarios/**")
+                .hasAuthority("QUESTIONARIOS_EDITAR")
+                .requestMatchers("/api/v1/funcionarios/**")
+                .hasAuthority("FUNCIONARIOS_CADASTRO")
+                .requestMatchers("/api/v1/relatorios-gerais/**")
+                .hasAuthority("RELATORIO_GERAL_VIEW")
+                .requestMatchers("/api/v1/relatorios-empresa/**")
+                .hasAuthority("RELATORIOS_EMPRESAS_VIEW")
+                // todo o resto protegido
                 .anyRequest().authenticated()
                 )
                 // JWT antes do UsernamePasswordAuthenticationFilter
