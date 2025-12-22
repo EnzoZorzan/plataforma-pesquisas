@@ -34,31 +34,40 @@ public class DataInitializer implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) {
 
-        Perfil perfil = perfilRepository.findById(1L)
+        // =========================
+        // PERFIL ADMIN
+        // =========================
+        Perfil perfil = perfilRepository.findByNome("Administrador")
                 .orElseGet(() -> {
                     Perfil p = new Perfil();
-                    p.setId(1L);
                     p.setNome("Administrador");
                     return perfilRepository.save(p);
                 });
 
-        Empresas empresa = empresasRepository.findById(9L)
+        // =========================
+        // EMPRESA PADRÃO
+        // =========================
+        Empresas empresa = empresasRepository.findByNome("Empresa Padrão")
                 .orElseGet(() -> {
                     Empresas e = new Empresas();
-                    e.setId(9L);
                     e.setNome("Empresa Padrão");
                     return empresasRepository.save(e);
                 });
 
-        Usuario admin = new Usuario();
-        admin.setNome("Enzo Zorzan Lima");
-        admin.setEmail("enzozorzanlima@gmail.com");
-        admin.setSenha(passwordEncoder.encode("123456"));
-        admin.setPerfil(perfil);
-        admin.setEmpresa(empresa);
-        usuarioRepository.save(admin);
+        // =========================
+        // USUÁRIO ADMIN
+        // =========================
+        usuarioRepository.findByEmail("enzozorzanlima@gmail.com")
+                .orElseGet(() -> {
+                    Usuario admin = new Usuario();
+                    admin.setNome("Enzo Zorzan Lima");
+                    admin.setEmail("enzozorzanlima@gmail.com");
+                    admin.setSenha(passwordEncoder.encode("123456"));
+                    admin.setPerfil(perfil);
+                    admin.setEmpresa(empresa);
+                    return usuarioRepository.save(admin);
+                });
 
         System.out.println("✔ Bootstrap completo");
     }
-
 }

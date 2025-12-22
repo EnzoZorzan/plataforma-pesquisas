@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface EmpresasRepository extends JpaRepository<Empresas, Long> {
     
     Optional<Empresas> findByNomeIgnoreCase(String nome);
+    
+    Optional<Empresas> findByNome(String nome);
 }
